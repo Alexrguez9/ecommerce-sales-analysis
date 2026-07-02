@@ -1,6 +1,12 @@
 from sqlalchemy import create_engine
 
-from config import *
+from config import (
+    DB_HOST,
+    DB_PORT,
+    DB_NAME,
+    DB_USER,
+    DB_PASSWORD,
+)
 
 DATABASE_URL = (
     f"postgresql+psycopg2://"
