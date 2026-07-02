@@ -1,29 +1,24 @@
-cat > README.md << EOF
 # Ecommerce Sales Analysis
 
-Proyecto de análisis de ventas para e-commerce utilizando:
+Proyecto personal para aprender Data Analytics y Data Engineering.
+
+## Stack
 
 - Python
+- PostgreSQL
+- Docker
 - SQL
 - Pandas
-- Power BI / Streamlit
-- Docker
+- Power BI (próximamente)
 
-## Estructura
+## Objetivo
 
-\`\`\`
-ecommerce-sales-analysis/
-│
-├── data/
-│   ├── raw/
-│   └── processed/
-├── notebooks/
-├── sql/
-├── dashboard/
-├── reports/
-├── src/
-├── requirements.txt
-├── README.md
-├── .gitignore
-└── docker-compose.yml
-\`\`\`
+Construir una ETL para cargar datos de un ecommerce, analizarlos mediante SQL y visualizarlos en Power BI.
+
+## Dataset
+
+Olist Brazilian E-commerce Dataset (Kaggle)
+
+## Estado
+
+🚧 En desarrollo
