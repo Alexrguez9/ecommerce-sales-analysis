@@ -1,5 +1,5 @@
 import pandas as pd
-from logger import logger
+from src.logger import logger
 
 def extract_csv(file_path: str) -> pd.DataFrame:
     logger.info(f"Reading {file_path}")

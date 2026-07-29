@@ -1,6 +1,6 @@
 from sqlalchemy.engine import Engine
 import pandas as pd
-from logger import logger
+from src.logger import logger
 
 def load_dataframe(
     df: pd.DataFrame,
