@@ -1,26 +1,47 @@
 from database import engine
 from logger import logger
+from datasets import DATASETS
 from extract import extract_csv
 from transform import convert_dates
+from quality import (
+    check_shape,
+    check_nulls,
+    check_duplicates
+)
 from load import load_dataframe
-from datasets import DATASETS
 
 def main():
     logger.info("Starting ETL pipeline")
     for dataset in DATASETS:
-        df = extract_csv(dataset["file"])
+        logger.info(f"Processing table '{dataset['table']}'")
 
+        # Extract
+        df = extract_csv(
+            dataset["file"]
+        )
+
+        # Transform
         df = convert_dates(
             df,
             dataset["dates"]
         )
 
-        load_dataframe(
+        # Data Quality
+        check_shape(df)
+        check_nulls(df)
+        check_duplicates(
             df,
-            dataset["table"],
-            engine
+            dataset["primary_key"]
         )
-    logger.info("Pipeline finished successfully")
+
+        # Load
+        load_dataframe(
+            df=df,
+            table_name=dataset["table"],
+            engine=engine
+        )
+
+    logger.info("ETL pipeline finished successfully")
 
 
 if __name__ == "__main__":
