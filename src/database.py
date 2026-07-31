@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 
-from config import (
+from src.config import (
     DB_HOST,
     DB_PORT,
     DB_NAME,

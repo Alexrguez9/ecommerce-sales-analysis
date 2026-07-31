@@ -1,72 +1,77 @@
-from database import engine
-
-from extract import extract_csv
-from transform import convert_dates
-from load import load_dataframe
+from src.database import engine
+from src.logger import logger
+from src.datasets import DATASETS
+from src.etl.extract import extract_csv
+from src.etl.transform import convert_dates
+from src.etl.load import load_dataframe
+from src.quality.checks import (
+    get_shape,
+    count_nulls,
+    count_duplicates,
+)
+from src.quality.report import (
+    generate_report,
+)
+from src.utils.timer import Timer
 
 def main():
-    datasets = [
-        {
-            "table": "customers",
-            "file": "data/raw/customers_dataset.csv",
-            "dates": []
-        },
-        {
-            "table": "sellers",
-            "file": "data/raw/sellers_dataset.csv",
-            "dates": []
-        },
-        {
-            "table": "products",
-            "file": "data/raw/products_dataset.csv",
-            "dates": []
-        },
-        {
-            "table": "orders",
-            "file": "data/raw/orders_dataset.csv",
-            "dates": [
-                "order_purchase_timestamp",
-                "order_approved_at",
-                "order_delivered_carrier_date",
-                "order_delivered_customer_date",
-                "order_estimated_delivery_date"
-            ]
-        },
-        {
-            "table": "order_items",
-            "file": "data/raw/order_items_dataset.csv",
-            "dates": [
-                "shipping_limit_date"
-            ]
-        },
-        {
-            "table": "order_payments",
-            "file": "data/raw/order_payments_dataset.csv",
-            "dates": []
-        },
-        {
-            "table": "order_reviews",
-            "file": "data/raw/order_reviews_dataset.csv",
-            "dates": [
-                "review_creation_date",
-                "review_answer_timestamp"
-            ]
-        }
-    ]
+    timer = Timer()
+    timer.start_timer()
+    logger.info("Starting ETL pipeline")
+    results = []
 
-    for dataset in datasets:
-        df = extract_csv(dataset["file"])
+    for dataset in DATASETS:
+        try:
+            logger.info(f"Processing table '{dataset['table']}'")
 
-        df = convert_dates(
-            df,
-            dataset["dates"]
-        )
+            # Extract
+            df = extract_csv(
+                dataset["file"]
+            )
 
-        load_dataframe(
-            df,
-            dataset["table"],
-            engine
-        )
+            # Transform
+            df = convert_dates(
+                df,
+                dataset["dates"]
+            )
+
+            # Data Quality
+            rows, cols = get_shape(df)
+            nulls = count_nulls(df)
+            duplicates = count_duplicates(
+                df,
+                dataset["primary_key"]
+            )
+
+            results.append({
+                "table": dataset["table"],
+                "rows": rows,
+                "columns": cols,
+                "duplicates": duplicates,
+                "nulls": {
+                    column: int(value)
+                    for column, value in nulls.items()
+                    if value > 0
+                },
+            })
+
+            # Load
+            load_dataframe(
+                df=df,
+                table_name=dataset["table"],
+                engine=engine
+            )
+
+        except Exception as e:
+            logger.exception(f"Error processing table '{dataset['table']}'")
+
+    execution_time = timer.stop_timer()
+    generate_report(
+        results,
+        execution_time,
+    )
+
+    logger.info("Pipeline finished successfully")
 
 
 if __name__ == "__main__":

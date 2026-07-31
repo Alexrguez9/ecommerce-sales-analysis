@@ -1,5 +1,6 @@
 from sqlalchemy.engine import Engine
 import pandas as pd
+from src.logger import logger
 
 def load_dataframe(
     df: pd.DataFrame,
@@ -7,11 +8,11 @@ def load_dataframe(
     engine: Engine,
 ):
 
-    print(f"Cargando {table_name}...")
+    logger.info(f"Loading {table_name}...")
     df.to_sql(
         table_name,
         engine,
         if_exists="append",
         index=False,
     )
-    print(f"{table_name} cargada correctamente.")
+    logger.info(f"{table_name} loaded successfully.")

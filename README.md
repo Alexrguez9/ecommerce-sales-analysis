@@ -22,3 +22,18 @@ Olist Brazilian E-commerce Dataset (Kaggle)
 ## Estado
 
 🚧 En desarrollo
+
+## ETL Pipeline
+
+The pipeline follows the Extract → Transform → Quality → Load workflow.
+
+### Features
+
+- Modular ETL architecture
+- PostgreSQL database
+- Docker environment
+- SQLAlchemy
+- Logging
+- Data Quality Checks
+- Automatic ETL report generation
+- Unit Tests
