@@ -11,3 +11,6 @@ data/raw/*.xlsx
 
 .DS_Store
 *.log
+
+logs/
+reports/

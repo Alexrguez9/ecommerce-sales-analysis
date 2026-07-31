@@ -6,13 +6,11 @@ def get_shape(df: pd.DataFrame) -> tuple[int, int]:
     """
     return df.shape
 
-
-def count_nulls(df: pd.DataFrame) -> pd.Series:
+def count_nulls(df: pd.DataFrame) -> dict:
     """
     Returns the number of null values per column.
     """
-    return df.isnull().sum()
-
+    return df.isnull().sum().to_dict()
 
 def count_duplicates(df: pd.DataFrame, primary_key: list[str]) -> int:
     """

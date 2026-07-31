@@ -1,4 +1,4 @@
-CREATE TABLE customers (
+CREATE TABLE IF NOT EXISTS customers (
     customer_id TEXT PRIMARY KEY,
     customer_unique_id TEXT,
     customer_zip_code_prefix INTEGER,
@@ -6,14 +6,14 @@ CREATE TABLE customers (
     customer_state TEXT
 );
 
-CREATE TABLE sellers (
+CREATE TABLE IF NOT EXISTS sellers (
     seller_id TEXT PRIMARY KEY,
     seller_zip_code_prefix INTEGER,
     seller_city TEXT,
     seller_state TEXT
 );
 
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
     product_id TEXT PRIMARY KEY,
     product_category_name TEXT,
     product_name_length INTEGER,
@@ -25,7 +25,7 @@ CREATE TABLE products (
     product_width_cm INTEGER
 );
 
-CREATE TABLE orders (
+CREATE TABLE IF NOT EXISTS orders (
     order_id TEXT PRIMARY KEY,
     customer_id TEXT,
     order_status TEXT,
@@ -39,7 +39,7 @@ CREATE TABLE orders (
         REFERENCES customers(customer_id)
 );
 
-CREATE TABLE order_items (
+CREATE TABLE IF NOT EXISTS order_items (
     order_id TEXT,
     order_item_id INTEGER,
     product_id TEXT,
@@ -60,7 +60,7 @@ CREATE TABLE order_items (
         REFERENCES sellers(seller_id)
 );
 
-CREATE TABLE order_payments (
+CREATE TABLE IF NOT EXISTS order_payments (
     order_id TEXT,
     payment_sequential INTEGER,
     payment_type TEXT,
@@ -73,7 +73,7 @@ CREATE TABLE order_payments (
         REFERENCES orders(order_id)
 );
 
-CREATE TABLE order_reviews (
+CREATE TABLE IF NOT EXISTS order_reviews (
     review_id TEXT,
     order_id TEXT,
     review_score INTEGER,
@@ -88,7 +88,7 @@ CREATE TABLE order_reviews (
         REFERENCES orders(order_id)
 );
 
-CREATE TABLE geolocation (
+CREATE TABLE IF NOT EXISTS geolocation (
     geolocation_zip_code_prefix INTEGER,
     geolocation_lat NUMERIC,
     geolocation_lng NUMERIC,

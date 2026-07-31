@@ -1,17 +1,25 @@
 from src.database import engine
 from src.logger import logger
 from src.datasets import DATASETS
-from src.extract import extract_csv
-from src.transform import convert_dates
-from src.quality import (
+from src.etl.extract import extract_csv
+from src.etl.transform import convert_dates
+from src.etl.load import load_dataframe
+from src.quality.checks import (
     get_shape,
     count_nulls,
-    count_duplicates
+    count_duplicates,
 )
-from src.load import load_dataframe
+from src.quality.report import (
+    generate_report,
+)
+from src.utils.timer import Timer
 
 def main():
+    timer = Timer()
+    timer.start_timer()
     logger.info("Starting ETL pipeline")
+    results = []
+
     for dataset in DATASETS:
         try:
             logger.info(f"Processing table '{dataset['table']}'")
@@ -29,25 +37,23 @@ def main():
 
             # Data Quality
             rows, cols = get_shape(df)
-            logger.info(
-                f"Dataset shape: {rows} rows x {cols} columns"
-            )
-
             nulls = count_nulls(df)
-            nulls = nulls[nulls > 0]
-            if nulls.empty:
-                logger.info("No null values found.")
-            else:
-                logger.warning(f"Null values detected:\n{nulls}")
-
             duplicates = count_duplicates(
                 df,
                 dataset["primary_key"]
             )
-            if duplicates == 0:
-                logger.info("No duplicated primary keys.")
-            else:
-                logger.warning(f"{duplicates} duplicated rows found.")
+
+            results.append({
+                "table": dataset["table"],
+                "rows": rows,
+                "columns": cols,
+                "duplicates": duplicates,
+                "nulls": {
+                    column: int(value)
+                    for column, value in nulls.items()
+                    if value > 0
+                },
+            })
 
             # Load
             load_dataframe(
@@ -57,9 +63,15 @@ def main():
             )
 
         except Exception as e:
-            logger.error(f"Error processing table '{dataset['table']}': {e}")
+            logger.exception(f"Error processing table '{dataset['table']}'")
 
-    logger.info("ETL pipeline finished successfully")
+    execution_time = timer.stop_timer()
+    generate_report(
+        results,
+        execution_time,
+    )
+
+    logger.info("Pipeline finished successfully")
 
 
 if __name__ == "__main__":
