@@ -1,5 +1,5 @@
 import pandas as pd
-from src.extract import extract_csv
+from src.etl.extract import extract_csv
 
 def test_extract_csv_returns_dataframe():
     df = extract_csv("data/raw/customers_dataset.csv")
