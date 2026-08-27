@@ -1,5 +1,5 @@
 import pandas as pd
-from src.quality import (
+from src.quality.checks import (
     get_shape,
     count_nulls,
     count_duplicates
