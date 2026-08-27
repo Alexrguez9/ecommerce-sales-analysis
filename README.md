@@ -3,24 +3,21 @@
 An end-to-end data analytics project that processes e-commerce data through a Python ETL pipeline, stores it in PostgreSQL and exposes business metrics through SQL analytical views and a Metabase dashboard.
 
 ## Architecture
+```text
 CSV Datasets
-     │
-     ▼
+     ↓
 Python ETL Pipeline
-     │
      ├── Extract
      ├── Transform
      ├── Data Quality Checks
      └── Load
-     │
-     ▼
-PostgreSQL
-     │
-     ▼
-Analytics SQL Views
-     │
-     ▼
-Metabase Dashboard
+          ↓
+     PostgreSQL
+          ↓
+   Analytics SQL Views
+          ↓
+   Metabase Dashboard
+```
 
 ## Stack
 
