@@ -44,10 +44,6 @@ Order Reviews
 
 More information is available in docs/data_model.md
 
-## Objetivo
-
-Construir una ETL para cargar datos de un ecommerce, analizarlos mediante SQL y visualizarlos en Power BI.
-
 ## Dataset
 
 Olist Brazilian E-commerce Dataset (Kaggle)
